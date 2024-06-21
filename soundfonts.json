@@ -1,0 +1,7 @@
+{
+    "soundfonts": {
+      "SGM Plus": "https://storage.googleapis.com/magentadata/js/soundfonts/sgm-plus",
+      "Salamander": "https://storage.googleapis.com/magentadata/js/soundfonts/salamander",
+      "Jazz Kit": "https://storage.googleapis.com/magentadata/js/soundfonts/jazz_kit"
+    }
+  }

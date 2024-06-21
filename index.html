@@ -49,9 +49,9 @@
     <div>
         <label for="soundfontSelect1">Select Soundfont:</label>
         <select id="soundfontSelect1" onchange="changeSoundfont('midiPlayer1', this.value)">
-            <option value="sounds/Perfect Sine.sf2">Perfect Sine</option>
-            <option value="sounds/Acid SQ Neutral.sf2">Acid SQ Neutral</option>
-            <option value="sounds/Solar Wind.sf2">Solar Wind</option>
+            <option value="SGM Plus">SGM Plus</option>
+            <option value="Salamander">Salamander</option>
+            <option value="Jazz Kit">Jazz Kit</option>
         </select>
     </div>
     <midi-player id="midiPlayer1"
@@ -73,9 +73,9 @@
     <div>
         <label for="soundfontSelect2">Select Soundfont:</label>
         <select id="soundfontSelect2" onchange="changeSoundfont('midiPlayer2', this.value)">
-            <option value="sounds/Perfect Sine.sf2">Perfect Sine</option>
-            <option value="sounds/Acid SQ Neutral.sf2">Acid SQ Neutral</option>
-            <option value="sounds/Solar Wind.sf2">Solar Wind</option>
+            <option value="SGM Plus">SGM Plus</option>
+            <option value="Salamander">Salamander</option>
+            <option value="Jazz Kit">Jazz Kit</option>
         </select>
     </div>
     <midi-player id="midiPlayer2"
@@ -89,6 +89,14 @@
     <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
 
     <script>
+        // Fetch the soundfonts.json file
+        fetch('soundfonts.json')
+            .then(response => response.json())
+            .then(data => {
+                window.soundfonts = data.soundfonts;
+            })
+            .catch(error => console.error('Error fetching soundfonts:', error));
+
         function changeMidi(playerId, visualizerId, newSrc) {
             const player = document.getElementById(playerId);
             const visualizer = document.getElementById(visualizerId);
@@ -96,16 +104,21 @@
             visualizer.src = newSrc;
         }
 
-        function changeSoundfont(playerId, soundfontUrl) {
+        function changeSoundfont(playerId, soundfontName) {
+            const soundfontUrl = window.soundfonts[soundfontName];
+            if (!soundfontUrl) {
+                console.error('Soundfont URL not found for:', soundfontName);
+                return;
+            }
             const player = document.getElementById(playerId);
             player.stop();
             player.soundFont = soundfontUrl;
             player.start();
         }
-
     </script>
 
     <p>For more information, see <a href="https://github.com/cifkao/html-midi-player" target="_blank">the <strong>html-midi-player</strong> repository</a> on GitHub.</p>
 </body>
 </html>
+
 
