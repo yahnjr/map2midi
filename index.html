@@ -1,0 +1,111 @@
+<!-- <midi-player
+  src="tracks/out_midi1.mid"
+  sound-font visualizer="#myPianoRollVisualizer">
+</midi-player>
+
+<midi-visualizer type="piano-roll" id="myPianoRollVisualizer" 
+  src="tracks/out_midi1.mid"
+  sound-font visualizer="#section3 midi-visualizer">
+</midi-visualizer>
+
+<midi-player
+  src="tracks/out_midi2.mid"
+  sound-font visualizer="#myStaffVisualizer">
+</midi-player>
+
+<midi-visualizer type="staff" id="myStaffVisualizer" 
+  src="tracks/out_midi2.mid">
+</midi-visualizer>
+
+<midi-player
+  src="tracks/out_midi2.mid"
+  sound-font visualizer="#myStaffVisualizer">
+</midi-player>
+
+<midi-visualizer type="staff" id="myStaffVisualizer" 
+  src="tracks/out_midi2.mid">
+</midi-visualizer>
+
+<script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+
+<p>For more information, see <a href="https://github.com/cifkao/html-midi-player" target="_blank">the <strong>html-midi-player</strong> repository</a> on GitHub.</p> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI Player with Soundfont Dropdown</title>
+</head>
+<body>
+    <div>
+        <label for="midiSelect1">Select MIDI File:</label>
+        <select id="midiSelect1" onchange="changeMidi('midiPlayer1', 'pianoRollVisualizer', this.value)">
+            <option value="tracks/out_midi1.mid">MIDI 1</option>
+            <option value="tracks/out_midi2.mid">MIDI 2</option>
+            <option value="tracks/out_midi3.mid">MIDI 3</option>
+        </select>
+    </div>
+    <div>
+        <label for="soundfontSelect1">Select Soundfont:</label>
+        <select id="soundfontSelect1" onchange="changeSoundfont('midiPlayer1', this.value)">
+            <option value="sounds/Perfect Sine.sf2">Perfect Sine</option>
+            <option value="sounds/Acid SQ Neutral.sf2">Acid SQ Neutral</option>
+            <option value="sounds/Solar Wind.sf2">Solar Wind</option>
+        </select>
+    </div>
+    <midi-player id="midiPlayer1"
+                 src="tracks/out_midi1.mid"
+                 sound-font visualizer="#pianoRollVisualizer">
+    </midi-player>
+    <midi-visualizer type="piano-roll" id="pianoRollVisualizer"
+                     src="tracks/out_midi1.mid">
+    </midi-visualizer>
+
+    <div>
+        <label for="midiSelect2">Select MIDI File:</label>
+        <select id="midiSelect2" onchange="changeMidi('midiPlayer2', 'staffVisualizer', this.value)">
+            <option value="tracks/out_midi1.mid">MIDI 1</option>
+            <option value="tracks/out_midi2.mid">MIDI 2</option>
+            <option value="tracks/out_midi3.mid">MIDI 3</option>
+        </select>
+    </div>
+    <div>
+        <label for="soundfontSelect2">Select Soundfont:</label>
+        <select id="soundfontSelect2" onchange="changeSoundfont('midiPlayer2', this.value)">
+            <option value="sounds/Perfect Sine.sf2">Perfect Sine</option>
+            <option value="sounds/Acid SQ Neutral.sf2">Acid SQ Neutral</option>
+            <option value="sounds/Solar Wind.sf2">Solar Wind</option>
+        </select>
+    </div>
+    <midi-player id="midiPlayer2"
+                 src="tracks/out_midi2.mid"
+                 sound-font visualizer="#staffVisualizer">
+    </midi-player>
+    <midi-visualizer type="staff" id="staffVisualizer"
+                     src="tracks/out_midi2.mid">
+    </midi-visualizer>
+
+    <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+
+    <script>
+        function changeMidi(playerId, visualizerId, newSrc) {
+            const player = document.getElementById(playerId);
+            const visualizer = document.getElementById(visualizerId);
+            player.src = newSrc;
+            visualizer.src = newSrc;
+        }
+
+        function changeSoundfont(playerId, soundfontUrl) {
+            const player = document.getElementById(playerId);
+            player.stop();
+            player.soundFont = soundfontUrl;
+            player.start();
+        }
+
+    </script>
+
+    <p>For more information, see <a href="https://github.com/cifkao/html-midi-player" target="_blank">the <strong>html-midi-player</strong> repository</a> on GitHub.</p>
+</body>
+</html>
+
