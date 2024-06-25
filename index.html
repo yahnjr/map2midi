@@ -1,35 +1,3 @@
-<!-- <midi-player
-  src="tracks/out_midi1.mid"
-  sound-font visualizer="#myPianoRollVisualizer">
-</midi-player>
-
-<midi-visualizer type="piano-roll" id="myPianoRollVisualizer" 
-  src="tracks/out_midi1.mid"
-  sound-font visualizer="#section3 midi-visualizer">
-</midi-visualizer>
-
-<midi-player
-  src="tracks/out_midi2.mid"
-  sound-font visualizer="#myStaffVisualizer">
-</midi-player>
-
-<midi-visualizer type="staff" id="myStaffVisualizer" 
-  src="tracks/out_midi2.mid">
-</midi-visualizer>
-
-<midi-player
-  src="tracks/out_midi2.mid"
-  sound-font visualizer="#myStaffVisualizer">
-</midi-player>
-
-<midi-visualizer type="staff" id="myStaffVisualizer" 
-  src="tracks/out_midi2.mid">
-</midi-visualizer>
-
-<script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
-
-<p>For more information, see <a href="https://github.com/cifkao/html-midi-player" target="_blank">the <strong>html-midi-player</strong> repository</a> on GitHub.</p> -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,48 +8,20 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
     <title>MIDI Player with Soundfont Dropdown</title>
   </head>
-  <style>
-    .boxes-container {
-      display: grid;
-      grid-template-columns: 25% 75%; /* Two columns with specified widths */
-      grid-gap: 10px; /* Gap between boxes */
-      width: 100%; /* Full width of the container */
-      height: 500px; /* Fixed height of the container */
-    }
-
-    .box {
-      height: 200px; /* Height of each box */
-      background-color: #0d0d0d; /* Background color for boxes */
-      margin: 0; /* No margin as grid-gap handles spacing */
-    }
-
-    .box1, .box3 {
-      grid-column: 1; /* Place in the first column */
-      background-color: #d3d3d3; /* Background color for boxes */
-    }
-
-    .box2, .box4 {
-      grid-column: 2; /* Place in the second column */
-      background-color: #d3d3d3; /* Background color for boxes */
-    }
-
-    .map-container {
-      width: 100%;
-      height: 100%; /* Adjusted to fill the height of the container */
-    }
-
-  </style>
   <body>
     <div class="boxes-container">
         <div class="box1">
           <div>
-            <label for="midiSelect1">Select MIDI File:</label>
-            <select id="midiSelect1" onchange="changeMidi('midiPlayer1', 'pianoRollVisualizer1', this.value)">
-              <option value="tracks/out_midi1.mid">MIDI 1</option>
-              <option value="tracks/out_midi2.mid">MIDI 2</option>
-              <option value="tracks/out_midi3.mid">MIDI 3</option>
-            </select>
-          </div>
+            <label for="datasetSelect1">Select Dataset:</label>
+            <select id="datasetSelect1">
+              <option value="">Select a dataset</option>
+              <option value="LaPine">La Pine</option>
+              <option value="USCities">Major US Cities</option>
+          </select>
+      </div>
+      
+      <script src="classes.js"></script>
+
           <div>
             <label for="soundfontSelect1">Select Soundfont:</label>
             <select id="soundfontSelect1" onchange="changeSoundfont('midiPlayer1', this.value)">
@@ -100,13 +40,13 @@
         </div>
         <div class="box3">
           <div>
-            <label for="midiSelect2">Select MIDI File:</label>
-            <select id="midiSelect2" onchange="changeMidi('midiPlayer2', 'pianoRollVisualizer2', this.value)">
-              <option value="tracks/out_midi1.mid">MIDI 1</option>
-              <option value="tracks/out_midi2.mid">MIDI 2</option>
-              <option value="tracks/out_midi3.mid">MIDI 3</option>
-            </select>
-          </div>
+            <label for="datasetSelect2">Select Dataset:</label
+            <select id="datasetSelect2">
+              <option value="">Select a dataset</option>
+              <option value="LaPine">La Pine</option>
+              <option value="USCities">Major US Cities</option>
+          </select>
+      </div>
           <div>
             <label for="soundfontSelect2">Select Soundfont:</label>
             <select id="soundfontSelect2" onchange="changeSoundfont('midiPlayer2', this.value)">
@@ -129,152 +69,7 @@
 
     <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
 
-    <script>
-
-        mapboxgl.accessToken = 'pk.eyJ1IjoiaWZvcm1haGVyIiwiYSI6ImNsaHBjcnAwNDF0OGkzbnBzZmUxM2Q2bXgifQ.fIyIgSwq1WWVk9CKlXRXiQ';
-
-        var map1 = new mapboxgl.Map({
-            container: 'map1',
-            style: 'mapbox://styles/mapbox/satellite-streets-v11', // Changed to satellite map with labels
-            center: [0, 20], // Starting position [lng, lat]
-            zoom: 1.5 // Starting zoom level
-        });
-
-        map1.on('load', function () {
-            fetch('geo/USAMajor.geojson') // Replace with your GeoJSON URL
-    .then(response => response.json())
-    .then(data => {
-      const features = data.features;
-
-      let minLat = Infinity;
-      let maxLat = -Infinity;
-
-      for (const feature of features) {
-        const coords = feature.geometry.coordinates;
-        minLat = Math.min(minLat, coords[1]);
-        maxLat = Math.max(maxLat, coords[1])
-      }
-
-      const distance = Math.floor(maxLat - minLat);
-
-      function distanceToZoom(distanceInMiles) {
-        const zoom = Math.min(10- Math.log(distanceInMiles) / Math.log(2), 12);
-        return Math.max(zoom,2);
-      }
-
-      const zoom = distanceToZoom(distance * 111132);
-
-      // Calculate center based on data type (replace with your logic)
-      let center = [0, 0]; // Initial values
-      if (features[0].geometry.type === 'Point') {
-        // Logic for calculating center from point coordinates
-        let sumLat = 0;
-        let sumLng = 0;
-        for (const feature of features) {
-          sumLat += feature.geometry.coordinates[1]; // Latitude
-          sumLng += feature.geometry.coordinates[0]; // Longitude
-        }
-        center = [sumLng / features.length, sumLat / features.length];
-      } else if (features[0].geometry.type === 'Polygon') {
-        // Logic for using bounding box (example using Turf.js)
-        const bbox = turf.bbox(features[0]);
-        center = [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2];
-      }
-
-      // You can adjust zoom based on data density or extent
-
-      // Set map center and zoom
-      map1.setCenter(center);
-      map1.setZoom(zoom);
-    });
-  map1.addSource('USAMajorSource', {
-    type: 'geojson',
-    data: 'geo/USAMajor.geojson' // Replace with the URL of your GeoJSON file
-  });
-
-  // Add a layer to render the point data
-  map1.addLayer({
-    id: 'USAMajorLayer',
-    type: 'circle', // Use 'circle' for point data
-    source: 'USAMajorSource',
-    paint: {
-      'circle-color': '#ff9933', // Example circle color, adjust as needed
-      'circle-radius': 5, // Example circle radius in pixels, adjust as needed
-      'circle-opacity': 0.8 // Example circle opacity, adjust as needed
-    }
-  });
-});
-        var map2 = new mapboxgl.Map({
-            container: 'map2',
-            style: 'mapbox://styles/mapbox/satellite-streets-v11', // Changed to satellite map with labels
-            center: [0, 20], // Starting position [lng, lat]
-            zoom: 10 // Starting zoom level
-        });
-        map2.on('load', function() {
-        fetch('geo/Lapine_comment.geojson') // Replace with your GeoJSON URL
-    .then(response => response.json())
-    .then(data => {
-      const features = data.features;
-
-      let minLat = Infinity;
-      let maxLat = -Infinity;
-
-      for (const feature of features) {
-        const coords = feature.geometry.coordinates;
-        minLat = Math.min(minLat, coords[1]);
-        maxLat = Math.max(maxLat, coords[1])
-      }
-
-      const distance = Math.floor(maxLat - minLat);
-
-      function distanceToZoom(distanceInMiles) {
-        const zoom = Math.min(10- Math.log(distanceInMiles) / Math.log(2), 12);
-        return Math.max(zoom,2);
-      }
-
-      const zoom = distanceToZoom(distance * 111132);
-
-      // Calculate center based on data type (replace with your logic)
-      let center = [0, 0]; // Initial values
-      if (features[0].geometry.type === 'Point') {
-        // Logic for calculating center from point coordinates
-        let sumLat = 0;
-        let sumLng = 0;
-        for (const feature of features) {
-          sumLat += feature.geometry.coordinates[1]; // Latitude
-          sumLng += feature.geometry.coordinates[0]; // Longitude
-        }
-        center = [sumLng / features.length, sumLat / features.length];
-      } else if (features[0].geometry.type === 'Polygon') {
-        // Logic for using bounding box (example using Turf.js)
-        const bbox = turf.bbox(features[0]);
-        center = [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2];
-      }
-
-      // You can adjust zoom based on data density or extent
-
-      // Set map center and zoom
-      map2.setCenter(center);
-      map2.setZoom(zoom);
-    });
-  map2.addSource('Lapine_comment', {
-    type: 'geojson',
-    data: 'geo/Lapine_comment.geojson' // Replace with the URL of your GeoJSON file
-  });
-
-  // Add a layer to render the point data
-  map2.addLayer({
-    id: 'Lapine_comment_Layer',
-    type: 'circle', // Use 'circle' for point data
-    source: 'Lapine_comment',
-    paint: {
-      'circle-color': '#ff9933', // Example circle color, adjust as needed
-      'circle-radius': 5, // Example circle radius in pixels, adjust as needed
-      'circle-opacity': 1 // Example circle opacity, adjust as needed
-    }
-  });
-});
-    </script>
+    <script src ="main.js"></script>
 
     <script>
       // Fetch the soundfonts.json file
