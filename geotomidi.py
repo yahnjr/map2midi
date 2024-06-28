@@ -46,47 +46,46 @@ def geo2midi2(input_layer):
     features["Note"] = features["row"].astype(int) + 63
 
     print("Processing complete")
+    
+    features_name = input_layer.split("\\")[-1][:-4]
 
-def createMidi(df):
-    filename = f"C:\python\scripts\midi2play\\tracks\\{features_name}.mid"
-    mf = MIDIFile(1)
-    # Set the tempo (optional, adjust as needed)
-    mf.addTempo(0, 0, 360)  # Tempo of 360bpm
+    def createMidi(df):
+        filename = f"C:\\python\\scripts\\midi2play\\tracks\\{features_name}.mid"
+        mf = MIDIFile(1)
+        
+        # Set the tempo (optional, adjust as needed)
+        mf.addTempo(0, 0, 360)  # Tempo of 360bpm
+        
+        # Define time resolution (in ticks per beat)
+        tempo = 360
+        time_resolution = 480
+        
+        # Desired song length in seconds
+        song_length = 8
+        
+        # Calculate total ticks for the 8-second track
+        total_ticks = int(song_length * time_resolution / (60 / tempo))
+        
+        # Ticks per column (assuming 48 beats and 48 columns)
+        ticks_per_column = int(total_ticks / 48)
+        
+        # Loop through each row in the dataframe
+        for index, row in df.iterrows():
+            # Calculate time offset based on position (Col)
+            time_offset = int(row["col"]) * ticks_per_column
+            mf.addNote(0, 0, row["Note"], time_offset, 1, volume=100)
+            print(f"Note added at {time_offset} ticks")
+        
+        with open(filename, "wb") as outf:
+            mf.writeFile(outf)
+        print(f"MIDI file created at {filename}")
+    
+    
+    createMidi(features)
 
-    # Track for notes
-    track = 0
-    # Define time resolution (in ticks per beat)
-    tempo = 360
-    time_resolution = 480
-
-    seconds_per_beat = 60 / tempo
-
-    # Desired song length in seconds
-    song_length = 8
-
-    # Total number of ticks for the song
-    total_ticks = int(song_length * time_resolution / seconds_per_beat)
-
-    # Ticks per column (assuming 48 beats and 48 columns)
-    ticks_per_column = int(total_ticks / 48)
-
-    # Loop through each row in the dataframe
-    for index, row in df.iterrows():
-        # Calculate time offset based on position (Col)
-        # Calculate time offset based on ticks per column
-        time_offset = int(row["col"]) * ticks_per_column
-        mf.addNote(track, 0, row["Note"], time_offset, 1, volume=100)
-        print(f"note added at {time_offset}")
-
-    with open(filename, "wb") as outf:
-        mf.writeFile(outf)
-    print(f"midi file created at {filename}")
-
-input_layer = r"C:\python\shapefiles\Copper.shp"
-features_name = input_layer.split("\\")[-1][:-4]
+input_layer = r"C:\python\shapefiles\AirportsMetadata.shp"
 
 geo2midi2(input_layer)
-createMidi(features)
 
 ################################################################################################################################################s
 filename = r"C:\python\scripts\midiplay\out_midi3.mid"
