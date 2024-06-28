@@ -7,13 +7,6 @@ const map1 = new mapboxgl.Map({
     zoom: 2 // Initial zoom
 });
 
-const map2 = new mapboxgl.Map({
-    container: 'map2',
-    style: 'mapbox://styles/mapbox/satellite-streets-v11',
-    center: [0, 0], // Initial center
-    zoom: 2 // Initial zoom
-});
-
 document.addEventListener('DOMContentLoaded', () => {
     const datasetSelector = document.getElementById('datasetSelect1');
 

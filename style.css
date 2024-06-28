@@ -1,28 +1,28 @@
 .boxes-container {
-    display: grid;
-    grid-template-columns: 25% 75%; /* Two columns with specified widths */
-    grid-gap: 10px; /* Gap between boxes */
-    width: 100%; /* Full width of the container */
-    height: 500px; /* Fixed height of the container */
-  }
+  display: grid;
+  grid-template-columns: 25% 75%; /* Two columns with specified widths */
+  grid-gap: 10px; /* Gap between boxes */
+  width: 100%; /* Full width of the container */
+  height: 500px; /* Fixed height of the container */
+}
 
-  .box {
-    height: 200px; /* Height of each box */
-    background-color: #0d0d0d; /* Background color for boxes */
-    margin: 0; /* No margin as grid-gap handles spacing */
-  }
+.box {
+  height: 200px; /* Height of each box */
+  background-color: #0d0d0d; /* Background color for boxes */
+  margin: 0; /* No margin as grid-gap handles spacing */
+}
 
-  .box1, .box3 {
-    grid-column: 1; /* Place in the first column */
-    background-color: #d3d3d3; /* Background color for boxes */
-  }
+.box1, .box3 {
+  grid-column: 1; /* Place in the first column */
+  background-color: #d3d3d3; /* Background color for boxes */
+}
 
-  .box2, .box4 {
-    grid-column: 2; /* Place in the second column */
-    background-color: #d3d3d3; /* Background color for boxes */
-  }
+.box2, .box4 {
+  grid-column: 2; /* Place in the second column */
+  background-color: #d3d3d3; /* Background color for boxes */
+}
 
-  .map-container {
-    width: 100%;
-    height: 100%; /* Adjusted to fill the height of the container */
-  }
+.map-container {
+  width: 100%;
+  height: 100%; /* Adjusted to fill the height of the container */
+}
