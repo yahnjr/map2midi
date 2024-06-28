@@ -82,8 +82,18 @@ class dataset {
             console.log("Lat distance", LatDist);
         
             function distanceToZoom(distanceInMeters) {
-                const zoom = Math.min(10 - Math.log(distanceInMeters) / Math.log(2), 12);
-                return Math.max(zoom, 2);
+                // Define the desired zoom range
+                const minZoom = 2;
+                const maxZoom = 12;
+            
+                // Calculate the zoom level based on the distance
+                const zoomRange = maxZoom - minZoom;
+                const zoom = minZoom + (zoomRange / distanceInMeters);
+            
+                // Ensure the zoom level is within bounds
+                distance = Math.max(minZoom, Math.min(maxZoom, zoom));
+
+                return distance
             }
         
             let distance;
@@ -93,7 +103,7 @@ class dataset {
                 distance = LatDist;
             }
         
-            const zoom = distanceToZoom(distance * 111132);
+            const zoom = distanceToZoom(distance);
         
             this.zoom = zoom;
         }
@@ -115,7 +125,7 @@ setTimeout(() => {
     console.log('Copper zoom', Copper.zoom);
     console.log("Airports zoom", AirportsMetadata.zoom);
     console.log("Walls zoom", Walls.zoom);
-    console.log("Enhanced_USA_Major_Cities zoom", Enhanced_USA_Major_Cities.zoom);
+    console.log("Enriched_USA_Major_Cities zoom", Enriched_USA_Major_Cities.zoom);
     console.log("RTAStops zoom", RTAStops.zoom);
 }, 2000); // Adjust timeout as needed based on load time
 
