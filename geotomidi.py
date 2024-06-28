@@ -2,6 +2,104 @@ import arcpy
 import os
 import pandas as pd
 import geopandas as gpd
+from midiutil.MidiFile import MIDIFile
+
+input_layer = r"C:\python\scripts\midi2play\shapefiles\Copper.shp"
+
+def geo2midi2(input_layer):
+    min_x = 0
+    max_x = 0
+    x_range = 0
+    x_step = 0
+    min_y = 0
+    max_y = 0
+    y_range = 0
+    y_step = 0
+
+    features = gpd.read_file(input_layer)
+    bounds = features.total_bounds
+
+    min_x, min_y, max_x, max_y = bounds
+
+    x_range = max_x - min_x
+    y_range = max_y - min_y
+
+    x_step = x_range / 48
+    y_step = y_range / 24
+
+    print(f"{x_step}, {y_step}")
+
+    features['normalized_x'] = features.geometry.x - min_x
+    features['normalized_y'] = features.geometry.y - min_y
+
+    # Calculate column and row values
+    features['col'] = (features['normalized_x'] / x_step).astype(int) + 1
+    features['row'] = (features['normalized_y'] / y_step).astype(int) + 1
+
+    for idx, feature in features.iterrows():
+        print(f"Point at {feature.geometry.x:.2f} assigned value {feature['col']}")
+
+    duplicate_rows = features.duplicated(subset=['row','col'], keep = 'first')
+
+    features = features[~duplicate_rows]
+
+    features["Note"] = features["row"].astype(int) + 63
+
+    print("Processing complete")
+
+def createMidi(df):
+    filename = f"C:\python\scripts\midi2play\\tracks\\{features_name}.mid"
+    mf = MIDIFile(1)
+    # Set the tempo (optional, adjust as needed)
+    mf.addTempo(0, 0, 360)  # Tempo of 360bpm
+
+    # Track for notes
+    track = 0
+    # Define time resolution (in ticks per beat)
+    tempo = 360
+    time_resolution = 480
+
+    seconds_per_beat = 60 / tempo
+
+    # Desired song length in seconds
+    song_length = 8
+
+    # Total number of ticks for the song
+    total_ticks = int(song_length * time_resolution / seconds_per_beat)
+
+    # Ticks per column (assuming 48 beats and 48 columns)
+    ticks_per_column = int(total_ticks / 48)
+
+    # Loop through each row in the dataframe
+    for index, row in df.iterrows():
+        # Calculate time offset based on position (Col)
+        # Calculate time offset based on ticks per column
+        time_offset = int(row["col"]) * ticks_per_column
+        mf.addNote(track, 0, row["Note"], time_offset, 1, volume=100)
+        print(f"note added at {time_offset}")
+
+    with open(filename, "wb") as outf:
+        mf.writeFile(outf)
+    print(f"midi file created at {filename}")
+
+input_layer = r"C:\python\shapefiles\Copper.shp"
+features_name = input_layer.split("\\")[-1][:-4]
+
+geo2midi2(input_layer)
+createMidi(features)
+
+################################################################################################################################################s
+filename = r"C:\python\scripts\midiplay\out_midi3.mid"
+
+createMidi(midi_dataframe, filename)
+
+
+
+
+
+
+
+geo2midi2(input_layer)
 
 arcpy.env.overwriteOutput = True
 out_geodb = r"C:\Users\ianm\Desktop\Projects\Scratch\Scratch.gdb"
@@ -11,6 +109,7 @@ arcpy.env.workspace = out_geodb
 layer_file = r"C:\Users\ianm\Desktop\Projects\Scratch\Scratch.gdb\USAMajorCities"
 
 midi_dataframe = []
+
 
 
 def geo2midi(workspace, layer_file):
