@@ -117,6 +117,11 @@ setTimeout(() => {
     console.log('Center:', LaPine.center)
     console.log('LaPine zoom', LaPine.zoom)
     console.log("USA Cities zoom", USCities.zoom)
+    console.log('Walls Center:', Walls.center);
+    console.log('RTA Name', RTAStops.name);
+    console.log('USA2 Center:', Enriched_USA_Major_Cities.center)
+    console.log('Copper zoom', Copper.zoom)
+    console.log("Airports zoom", AirportsMetadata.zoom)
 }, 2000); // Adjust timeout as needed based on load time
 
 

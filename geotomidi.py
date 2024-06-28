@@ -83,7 +83,7 @@ def geo2midi2(input_layer):
     
     createMidi(features)
 
-input_layer = r"C:\python\shapefiles\AirportsMetadata.shp"
+input_layer = r"C:\python\shapefiles\Walls.shp"
 
 geo2midi2(input_layer)
 
