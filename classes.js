@@ -110,18 +110,13 @@ let AirportsMetadata = new dataset("https://yahnjr.github.io/map2midi/docs/Airpo
 // Note: Since loadFeatures is asynchronous, the center might not be immediately available.
 // You might need to wait or use an event/callback to ensure it's loaded before accessing it.
 setTimeout(() => {
-    console.log('Name:', USCities.name);
-    console.log('MIDI Path:', USCities.midi_path);
-    console.log('Center:', USCities.center);
-    console.log('Name', LaPine.name);
-    console.log('Center:', LaPine.center)
-    console.log('LaPine zoom', LaPine.zoom)
-    console.log("USA Cities zoom", USCities.zoom)
-    console.log('Walls Center:', Walls.center);
-    console.log('RTA Name', RTAStops.name);
-    console.log('USA2 Center:', Enriched_USA_Major_Cities.center)
-    console.log('Copper zoom', Copper.zoom)
-    console.log("Airports zoom", AirportsMetadata.zoom)
+    console.log('LaPine zoom', LaPine.zoom);
+    console.log("USA Cities zoom", USCities.zoom);
+    console.log('Copper zoom', Copper.zoom);
+    console.log("Airports zoom", AirportsMetadata.zoom);
+    console.log("Walls zoom", Walls.zoom);
+    console.log("Enhanced_USA_Major_Cities zoom", Enhanced_USA_Major_Cities.zoom);
+    console.log("RTAStops zoom", RTAStops.zoom);
 }, 2000); // Adjust timeout as needed based on load time
 
 
