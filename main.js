@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
  const datasets = {
     USCities: new dataset("https://yahnjr.github.io/map2midi/docs/USAMajor.geojson", "tracks/USMajor.mid"),
     LaPine: new dataset("https://yahnjr.github.io/map2midi/docs/Lapine_comment.geojson", "tracks/Lapine_comments.mid"),
-    RTAStops = new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid")
-    Walls = new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid")
-    Copper = new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid")
-    AirportsMetadata = new dataset("https://yahnjr.github.io/map2midi/docs/AirportsMetadata.geojson", "tracks/AirportsMetadata.mid")
-    Enriched_USA_Major_Cities = new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid")
+    RTAStops: new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid"),
+    Walls: new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid"),
+    Copper: new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid"),
+    AirportsMetadata: new dataset("https://yahnjr.github.io/map2midi/docs/AirportsMetadata.geojson", "tracks/AirportsMetadata.mid"),
+    Enriched_USA_Major_Cities: new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid")
     // Add more datasets as needed
   };
  datasetSelector.addEventListener('change', async (event) => {
