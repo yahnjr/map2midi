@@ -20,6 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
+            const proxyUrl = 'http://localhost:3000/proxy?url=';
             const soundfontUrl = "https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus/";
             const instrumentSelect = document.getElementById('instrumentSelect');
             const playButton = document.getElementById('playButton');
@@ -27,12 +28,12 @@
 
             // Load instrument samples
             async function loadInstrument(instrument) {
-                const response = await fetch(`${soundfontUrl}${instrument}/instrument.json`);
+                const response = await fetch(`${proxyUrl}${encodeURIComponent(soundfontUrl + instrument + '/instrument.json')}`);
                 const instrumentData = await response.json();
                 const samples = {};
 
                 for (let note in instrumentData) {
-                    samples[note] = `${soundfontUrl}${instrument}/${instrumentData[note]}`;
+                    samples[note] = `${proxyUrl}${encodeURIComponent(soundfontUrl + instrument + '/' + instrumentData[note])}`;
                 }
 
                 return samples;
@@ -46,13 +47,14 @@
             // Play MIDI file
             playButton.addEventListener('click', async function () {
                 const midiUrl = 'https://yahnjr.github.io/map2midi/tracks/Copper.mid';
-                const midiData = await fetch(midiUrl).then(response => response.arrayBuffer());
+                const midiData = await fetch(`${proxyUrl}${encodeURIComponent(midiUrl)}`).then(response => response.arrayBuffer());
                 const midi = new Midi(midiData);
 
                 // Load instrument samples
                 const samples = await loadInstrument(currentInstrument);
                 const sampler = new Tone.Sampler({
-                    urls: samples
+                    urls: samples,
+                    baseUrl: soundfontUrl
                 }).toDestination();
 
                 // Schedule the notes
