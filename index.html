@@ -45,7 +45,7 @@
 
             // Play MIDI file
             playButton.addEventListener('click', async function () {
-                const midiUrl = 'https://github.com/yahnjr/map2midi/blob/main/tracks/Copper.mid';
+                const midiUrl = 'https://yahnjr.github.io/map2midi/tracks/Copper.mid';
                 const midiData = await fetch(midiUrl).then(response => response.arrayBuffer());
                 const midi = new Midi(midiData);
 
