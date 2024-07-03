@@ -103,7 +103,7 @@ class dataset {
                 distance = LatDist;
             }
         
-            const zoom = distanceToZoom(distance);
+            const zoom = distanceToZoom(distance) + 1;
         
             this.zoom = zoom;
         }

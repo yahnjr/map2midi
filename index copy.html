@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <script src="classes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webmidi"></script>
+    <title>MIDI Player with Soundfont Dropdown</title>
+  </head>
+  <body>
+    <div class="boxes-container">
+        <div class="box1">
+      <div class="datasetSelectorBox">
+        <label for="datasetSelect">Select Dataset:</label>
+        <select id="datasetSelect">
+          <option value="">Select a dataset</option>
+          <option value="LaPine">La Pine</option>
+          <option value="USCities">Major US Cities</option>
+          <option value="Copper">Copper Deposits in India</option>
+          <option value="Enriched_USA_Major_Cities">Major Cities in USA</option>
+          <option value="AirportsMetadata">Airports in Finlad</option>
+          <option value="RTAStops">RTAStops</option>
+          <option value="Walls">Great Wall of China</option>
+      </select>
+  </div>
+          <div>
+            <select id="instrumentSelect">
+              <option value="0">Acoustic Grand Piano</option>
+              <option value="24">Acoustic Guitar (nylon)</option>
+              <option value="56">Trumpet</option>
+              <!-- Add more instruments as needed -->
+            </select>
+          
+          </div>
+          <midi-player 
+  id="midiPlayer1" 
+  src="tracks/out_midi1.mid" 
+  sound-font=""
+  sound-font visualizer="#pianoRollVisualizer1">
+</midi-player>
+<midi-visualizer 
+  type="piano-roll" 
+  id="pianoRollVisualizer1" 
+  src="tracks/out_midi1.mid">
+</midi-visualizer>
+          <p>
+            For more information, see
+            <a href="https://github.com/cifkao/html-midi-player" target="_blank"
+              >the <strong>html-midi-player</strong> repository</a
+            >
+            on GitHub.
+          </p>
+        </div>
+        <div class = "box2">
+            <div id="map1" class="map-container"></div>
+        </div>
+</section>
+
+<button id="playButton">Play/Pause</button>
+<select id="instrumentSelect">
+    <option value="0">Acoustic Grand Piano</option>
+    <option value="24">Acoustic Guitar (nylon)</option>
+    <option value="56">Trumpet</option>
+</select>
+<script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
+<script src="your-script.js"></script>
+      <!-- <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script> -->
+      <script src ="main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1"></script>
+    <script>
+   const midiPlayer = document.getElementById('midiPlayer1');
+   const player = midiPlayer.player;
+
+   document.getElementById('instrumentSelect').addEventListener('change', function(e) {
+      const instrumentNumber = parseInt(e.target.value);
+      const player = document.getElementById('midiPlayer1').player;
+      player.programChange(0, instrumentNumber); // Assuming channel 0
+    });
+
+   function changeInstrumentAndRestart(instrumentNumber) {
+      const midiPlayer = document.getElementById('midiPlayer1');
+      const player = midiPlayer.player;
+      const currentTime = player.currentTime;
+
+      player.stop();
+      player.programChange(0, instrumentNumber);
+      player.start(midiPlayer.src, undefined, currentTime);
+    }
+
+  </script>
+
+  </body>
+</html>
+
+GET /magentadata/js/soundfonts/sgm_plus/soundfont.json undefined
+Host: storage.googleapis.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br, zstd
+Referer: http://127.0.0.1:8080/
+Origin: http://127.0.0.1:8080
+Connection: keep-alive
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: cross-site
+Priority: u=4

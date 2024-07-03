@@ -7,14 +7,6 @@ const map1 = new mapboxgl.Map({
     zoom: 2 // Initial zoom
 });
 
- // Fetch the soundfonts.json file
- fetch("soundfonts.json")
- .then((response) => response.json())
- .then((data) => {
-   window.soundfonts = data.soundfonts;
- })
- .catch((error) => console.error("Error fetching soundfonts:", error));
-
 function changeMidi(playerId, visualizerId, newSrc) {
  const player = document.getElementById(playerId);
  const visualizer = document.getElementById(visualizerId);
@@ -100,4 +92,111 @@ document.addEventListener('DOMContentLoaded', () => {
      console.log("Dataset not found");
    }
  });
+
 });
+
+// let player;
+// let playerInitialized = false;
+// let pendingInstrumentChange = null;
+
+// fetch('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
+//   .then(response => {
+//     if (response.ok) {
+//       console.log('SoundFont URL is accessible');
+//       return response.text();
+//     }
+//     throw new Error('SoundFont URL is not accessible');
+//   })
+//   .then(data => console.log('First 100 characters of response:', data.slice(0, 100)))
+//   .catch(error => console.error('Error checking SoundFont URL:', error));
+
+// document.addEventListener('DOMContentLoaded', (event) => {
+//   console.log(`DOM content loaded at ${new Date().toISOString()}, initializing player...`);
+//   const initializationTimeout = setTimeout(() => {
+//     console.error("Player initialization timed out after 10 seconds");
+//   }, 10000);
+
+//   const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+// const soundfontUrl = corsProxy + 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
+
+//   mm.SoundFontPlayer.fromUrl(soundfontUrl)
+//     .then((loadedPlayer) => {
+//       clearTimeout(initializationTimeout);
+//       player = loadedPlayer;
+//       playerInitialized = true;
+//       console.log(`Player initialized successfully at ${new Date().toISOString()}`);
+//       if (pendingInstrumentChange !== null) {
+//         console.log("Executing pending instrument change");
+//         changeInstrument(pendingInstrumentChange);
+//         pendingInstrumentChange = null;
+//       }
+//     })
+//     .catch((error) => {
+//       clearTimeout(initializationTimeout);
+//       console.error("Error initializing player:", error);
+//     });
+
+//     console.log("Magenta Music library version:", mm.version);
+
+//   fetch("soundfonts.json")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       window.soundfonts = data.soundfonts;
+//       console.log("Soundfonts loaded");
+//     })
+//     .catch((error) => console.error("Error fetching soundfonts:", error));
+// });
+
+// function changeMidi(playerId, visualizerId, newSrc) {
+//   const playerElement = document.getElementById(playerId);
+//   const visualizer = document.getElementById(visualizerId);
+//   playerElement.src = newSrc;
+//   visualizer.src = newSrc;
+// }
+
+// function changeInstrument(instrumentNumber) {
+//   console.log(`Attempting to change instrument to ${instrumentNumber}`);
+//   if (!playerInitialized) {
+//     console.log("Player is not yet initialized. Queueing instrument change.");
+//     pendingInstrumentChange = instrumentNumber;
+//     return;
+//   }
+
+//   console.log("Player is initialized, proceeding with instrument change");
+//   player.loadSamples(instrumentNumber)
+//     .then(() => {
+//       console.log(`Loaded instrument: ${instrumentNumber}`);
+//       player.stop(); // Stop any currently playing notes
+//       player.playNoteDown(instrumentNumber, 60); // Play C4 as a test
+//       setTimeout(() => player.playNoteUp(instrumentNumber, 60), 1000);
+     
+//       // Update the midi-player soundfont property
+//       const midiPlayer = document.getElementById('midiPlayer1');
+//       if (midiPlayer) {
+//         midiPlayer.src = selectedDataset.midi_path;
+//         midiPlayer.soundFont = `https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus/${instrumentNumber}`;
+//       } else {
+//         console.warn("MIDI player element not found");
+//       }
+//     })
+//     .catch(error => {
+//       console.error("Error loading samples:", error);
+//       console.error("Player state:", player);
+//     });
+// }
+
+
+// function triggerPendingInstrumentChange() {
+//   if (playerInitialized && pendingInstrumentChange !== null) {
+//     console.log("Manually triggering pending instrument change");
+//     changeInstrument(pendingInstrumentChange);
+//     pendingInstrumentChange = null;
+//   } else {
+//     console.log("No pending instrument change or player not initialized");
+//   }
+// }
+// // Function to check if player is initialized
+// function isPlayerReady() {
+//   console.log(`Player initialization status: ${playerInitialized}`);
+//   return playerInitialized;
+// }

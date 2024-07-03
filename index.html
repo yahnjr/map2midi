@@ -1,54 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
-    <script src="classes.js"></script>
-    <title>MIDI Player with Soundfont Dropdown</title>
-  </head>
-  <body>
-    <div class="boxes-container">
-        <div class="box1">
-      <div class="datasetSelectorBox">
-        <label for="datasetSelect">Select Dataset:</label>
-        <select id="datasetSelect">
-          <option value="">Select a dataset</option>
-          <option value="LaPine">La Pine</option>
-          <option value="USCities">Major US Cities</option>
-          <option value="Copper">Copper Deposits in India</option>
-          <option value="Enriched_USA_Major_Cities">Major Cities in USA</option>
-          <option value="AirportsMetadata">Airports in Finlad</option>
-          <option value="RTAStops">RTAStops</option>
-          <option value="Walls">Great Wall of China</option>
-      </select>
-  </div>
-          <div>
-            <label for="soundfontSelect1">Select Soundfont:</label>
-            <select id="soundfontSelect1" onchange="changeSoundfont('midiPlayer1', this.value)">
-              <option value="SGM Plus">SGM Plus</option>
-              <option value="Salamander">Salamander</option>
-              <option value="Jazz Kit">Jazz Kit</option>
-            </select>
-          </div>
-          <midi-player id="midiPlayer1" src="tracks/out_midi1.mid" sound-font visualizer="#pianoRollVisualizer1">
-          </midi-player>
-          <midi-visualizer type="piano-roll" id="pianoRollVisualizer1" src="tracks/out_midi1.mid">
-          </midi-visualizer>
-        </div>
-        <div class = "box2">
-            <div id="map1" class="map-container"></div>
-        </div>
-      <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
-      <script src ="main.js"></script>
-    <p>
-      For more information, see
-      <a href="https://github.com/cifkao/html-midi-player" target="_blank"
-        >the <strong>html-midi-player</strong> repository</a
-      >
-      on GitHub.
-    </p>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic MIDI Player</title>
+</head>
+<body>
+    <h1>Basic MIDI Player</h1>
+    <select id="instrumentSelect">
+        <option value="acoustic_grand_piano">Acoustic Grand Piano</option>
+        <option value="church_organ">Church Organ</option>
+        <option value="violin">Violin</option>
+        <!-- Add more instruments as needed -->
+    </select>
+    <button id="playButton">Play MIDI</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@magenta/music"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.35/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const soundfontUrl = "https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus/";
+            const instrumentSelect = document.getElementById('instrumentSelect');
+            const playButton = document.getElementById('playButton');
+            let currentInstrument = 'acoustic_grand_piano';
+
+            // Load instrument samples
+            async function loadInstrument(instrument) {
+                const response = await fetch(`${soundfontUrl}${instrument}/instrument.json`);
+                const instrumentData = await response.json();
+                const samples = {};
+
+                for (let note in instrumentData) {
+                    samples[note] = `${soundfontUrl}${instrument}/${instrumentData[note]}`;
+                }
+
+                return samples;
+            }
+
+            // Change instrument
+            function changeInstrument(instrument) {
+                currentInstrument = instrument;
+            }
+
+            // Play MIDI file
+            playButton.addEventListener('click', async function () {
+                const midiUrl = 'https://github.com/yahnjr/map2midi/blob/main/tracks/Copper.mid';
+                const midiData = await fetch(midiUrl).then(response => response.arrayBuffer());
+                const midi = new Midi(midiData);
+
+                // Load instrument samples
+                const samples = await loadInstrument(currentInstrument);
+                const sampler = new Tone.Sampler({
+                    urls: samples
+                }).toDestination();
+
+                // Schedule the notes
+                midi.tracks.forEach(track => {
+                    track.notes.forEach(note => {
+                        const time = note.time;
+                        const duration = note.duration;
+                        const midiNote = note.midi;
+                        sampler.triggerAttackRelease(Tone.Frequency(midiNote, "midi"), duration, time);
+                    });
+                });
+
+                // Start Tone.js transport
+                Tone.Transport.start();
+            });
+
+            // Event listener for dropdown change
+            instrumentSelect.addEventListener('change', function () {
+                const instrument = this.value;
+                changeInstrument(instrument);
+            });
+        });
+    </script>
+</body>
 </html>
