@@ -90,11 +90,9 @@ class dataset {
 
             function distanceToZoom(distanceInMeters) {
             
-                // Calculate the zoom level based on the distance
                 const zoomRange = maxZoom - minZoom;
                 const zoom = minZoom + (zoomRange / distanceInMeters);
             
-                // Ensure the zoom level is within bounds
                 distance = Math.max(minZoom, Math.min(maxZoom, zoom));
 
                 return distance
@@ -122,8 +120,6 @@ let Hurricanes = new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.
 let rio_graffiti = new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid", "#baf741")
 let himalayas = new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid", "6ccbfb")
 
-// Note: Since loadFeatures is asynchronous, the center might not be immediately available.
-// You might need to wait or use an event/callback to ensure it's loaded before accessing it.
 setTimeout(() => {
     console.log('Copper zoom', Copper.zoom);
     console.log("Airports zoom", AirportsMetadata.zoom);
@@ -131,7 +127,7 @@ setTimeout(() => {
     console.log("Enriched_USA_Major_Cities zoom", Enriched_USA_Major_Cities.zoom);
     console.log("RTAStops zoom", RTAStops.zoom);
     console.log("rio zoom:", rio_graffiti.zoom)
-}, 2000); // Adjust timeout as needed based on load time
+}, 2000); 
 
 
     

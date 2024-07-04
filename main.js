@@ -1,39 +1,16 @@
 const mapboxAccessToken =
-  "pk.eyJ1IjoiaWZvcm1haGVyIiwiYSI6ImNsaHBjcnAwNDF0OGkzbnBzZmUxM2Q2bXgifQ.fIyIgSwq1WWVk9CKlXRXiQ"; // Replace with your Mapbox token
+  "pk.eyJ1IjoiaWZvcm1haGVyIiwiYSI6ImNsaHBjcnAwNDF0OGkzbnBzZmUxM2Q2bXgifQ.fIyIgSwq1WWVk9CKlXRXiQ"; 
 mapboxgl.accessToken = mapboxAccessToken;
 const map1 = new mapboxgl.Map({
   container: "map1",
   style: "mapbox://styles/mapbox/satellite-streets-v11",
-  center: [0, 0], // Initial center
-  zoom: 2, // Initial zoom
+  center: [0, 0],
+  zoom: 2, 
 });
 
 console.log("Map initialized");
 
-function changeMidi(playerId, visualizerId, newSrc) {
-  console.log("changeMidi called with", playerId, visualizerId, newSrc);
-  const player = document.getElementById(playerId);
-  const visualizer = document.getElementById(visualizerId);
-  player.src = newSrc;
-  visualizer.src = newSrc;
-}
-
-function changeSoundfont(playerId, soundfontName) {
-  console.log("changeSoundfont called with", playerId, soundfontName);
-  const soundfontUrl = window.soundfonts[soundfontName];
-  if (!soundfontUrl) {
-    console.error("Soundfont URL not found for:", soundfontName);
-    return;
-  }
-  const player = document.getElementById(playerId);
-  player.stop();
-  player.soundFont = soundfontUrl;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM fully loaded and parsed");
-  const datasetSelector = document.getElementById("datasetSelect");
-  const datasets = {
+const datasets = {
     RTAStops: new dataset(
       "https://yahnjr.github.io/map2midi/docs/RTAStops.geojson",
       "tracks/RTAStops.mid",
@@ -79,7 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
       "tracks/Hurricanes.mid",
       "#999999"
     ),
-  };
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM fully loaded and parsed");
+  const datasetSelector = document.getElementById("datasetSelect");
 
   datasetSelector.addEventListener("click", async (event) => {
     const progressBar = document.getElementById("progress-bar");
@@ -99,12 +80,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (selectedDataset) {
         console.log("Loading dataset:", selectedDataset);
-        // Wait for the dataset to fully load
         const checkLoaded = setInterval(() => {
           if (selectedDataset.loaded) {
             clearInterval(checkLoaded);
 
-            // Update Mapbox map
             if (selectedDataset.center && selectedDataset.zoom) {
               map1.flyTo({
                 center: selectedDataset.center,
@@ -112,13 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
               });
             }
 
-            // Remove existing GeoJSON layer if it exists
             if (map1.getSource("geojson-layer")) {
               map1.removeLayer("geojson-layer");
               map1.removeSource("geojson-layer");
             }
 
-            // Add new GeoJSON layer
             map1.addSource("geojson-layer", {
               type: "geojson",
               data: selectedDataset.path,
@@ -134,14 +111,13 @@ document.addEventListener("DOMContentLoaded", () => {
               },
             });
 
-            // Update MIDI player
             const midiPlayer = document.getElementById("playButton");
             if (midiPlayer) {
               midiPlayer.dataset.midiPath = selectedDataset.midi_path;
               console.log("MIDI path set to:", selectedDataset.midi_path);
             }
           }
-        }, 100); // Check every 100ms if the dataset is loaded
+        }, 100); 
       } else {
         console.log("Dataset not found");
       }
@@ -228,24 +204,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let progressInterval;
 let progressWidth = 0;
+let currentStep = 0;
+let selectedDataset;
 
 function startProgress() {
     if (progressInterval) {
         clearInterval(progressInterval);
     }
     progressWidth = 0;
+    currentStep = 0;
     const progressBarFill = document.getElementById('progress-bar-fill');
     progressBarFill.style.width = '0%';
     
+    if (map1.getLayer('progress-layer')) {
+        map1.removeLayer('progress-layer');
+    }
+    if (map1.getSource('progress-source')) {
+        map1.removeSource('progress-source');
+    }
+
     progressInterval = setInterval(() => {
         progressWidth += 100 / 48;
         progressBarFill.style.width = `${progressWidth}%`;
         
-        if (progressWidth >= 100) {
+        updateMapLayer();
+
+        currentStep++;
+        
+        if (currentStep >= 48) {
             clearInterval(progressInterval);
-            // Add any additional logic for when the progress completes
         }
-    }, 167); // 8000ms / 48 ≈ 167ms
+    }, 167); 
 }
 
 function stopProgress() {
@@ -255,14 +244,111 @@ function stopProgress() {
     const progressBarFill = document.getElementById('progress-bar-fill');
     progressBarFill.style.width = '0%';
     progressWidth = 0;
+    currentStep = 0;
+
+    if (map1.getLayer('progress-layer')) {
+        map1.removeLayer('progress-layer');
+    }
+    if (map1.getSource('progress-source')) {
+        map1.removeSource('progress-source');
+    }
 }
 
-document.getElementById('playButton').addEventListener('click', () => {
-    startProgress();
-    // Your existing play logic here
-});
+function updateMapLayer() {
+    if (!selectedDataset || !selectedDataset.features) return;
 
-document.getElementById('stopButton').addEventListener('click', () => {
+    const stepStart = selectedDataset.minLng + (currentStep * selectedDataset.step);
+    const stepEnd = stepStart + selectedDataset.step;
+
+    const featuresInStep = selectedDataset.features.filter(feature => {
+        const lng = feature.geometry.coordinates[0];
+        return lng >= stepStart && lng < stepEnd;
+    });
+
+    const geojson = {
+        type: 'FeatureCollection',
+        features: featuresInStep
+    };
+
+    if (map1.getLayer('progress-layer')) {
+        map1.removeLayer('progress-layer');
+    }
+    if (map1.getSource('progress-source')) {
+        map1.removeSource('progress-source');
+    }
+
+    map1.addSource('progress-source', {
+        type: 'geojson',
+        data: geojson
+    });
+
+    map1.addLayer({
+        id: 'progress-layer',
+        type: 'circle',
+        source: 'progress-source',
+        paint: {
+            'circle-radius': 8,
+            'circle-color': selectedDataset.color,
+            'circle-stroke-width': 2,
+            'circle-stroke-color': 'white',
+        }
+    });
+}
+
+async function playSong() {
+    console.log("playSong called");
+    const datasetSelect = document.getElementById("datasetSelect");
+    const soundFontSelect = document.getElementById("soundFontSelect");
+    const selectedDatasetKey = datasetSelect.querySelector(".selected").getAttribute("data-value");
+    selectedDataset = datasets[selectedDatasetKey];
+    const midiUrl = selectedDataset.midi_path;
+    const soundFontUrl = soundFontSelect.value;
+
+    console.log("Fetching MIDI from", midiUrl);
+    const midi = await fetch(midiUrl).then((response) => response.arrayBuffer());
+    console.log("Fetching SoundFont from", soundFontUrl);
+    const sfontBuffer = await fetch(soundFontUrl).then((response) => response.arrayBuffer());
+
+    const response = await fetch(selectedDataset.path);
+    const geojsonData = await response.json();
+    selectedDataset.features = geojsonData.features;
+
+    const lngs = selectedDataset.features.map(f => f.geometry.coordinates[0]);
+    selectedDataset.minLng = Math.min(...lngs);
+    selectedDataset.maxLng = Math.max(...lngs);
+    selectedDataset.step = (selectedDataset.maxLng - selectedDataset.minLng) / 48;
+
+    startProgress();
+    await JSSynth.waitForReady();
+    loadSynthesizer(midi, sfontBuffer);
+}
+
+function stopSong() {
+    console.log("stopSong called");
+    if (synth) {
+        if (synth.stopPlayer) {
+            synth.stopPlayer();
+        }
+        synth.close();
+        context.close();
+        synth = null;
+        context = null;
+    }
     stopProgress();
-    // Your existing stop logic here
-});
+}
+
+const playButton = document.getElementById("playButton");
+if (playButton) {
+    console.log("playButton found");
+    playButton.addEventListener("click", playSong);
+} else {
+    console.error("playButton not found");
+}
+
+const stopButton = document.getElementById("stopButton");
+if (stopButton) {
+    console.log("stopButton found");
+    stopButton.addEventListener("click", stopSong);
+} else {
+    console.error("stopButton not found");
+}
