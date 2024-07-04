@@ -84,7 +84,7 @@ class dataset {
             function distanceToZoom(distanceInMeters) {
                 // Define the desired zoom range
                 const minZoom = 2;
-                const maxZoom = 12;
+                const maxZoom = 11;
             
                 // Calculate the zoom level based on the distance
                 const zoomRange = maxZoom - minZoom;
@@ -121,33 +121,13 @@ let himalayas = new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.ge
 // Note: Since loadFeatures is asynchronous, the center might not be immediately available.
 // You might need to wait or use an event/callback to ensure it's loaded before accessing it.
 setTimeout(() => {
-    console.log('LaPine zoom', LaPine.zoom);
-    console.log("USA Cities zoom", USCities.zoom);
     console.log('Copper zoom', Copper.zoom);
     console.log("Airports zoom", AirportsMetadata.zoom);
     console.log("Walls zoom", Walls.zoom);
     console.log("Enriched_USA_Major_Cities zoom", Enriched_USA_Major_Cities.zoom);
     console.log("RTAStops zoom", RTAStops.zoom);
+    console.log("rio zoom:", rio_graffiti.zoom)
 }, 2000); // Adjust timeout as needed based on load time
 
 
-        // .then(data => {
-        //     this.features = data.features;
-
-        //     let center = [0, 0]; // Initial values
-        //     if (data.features[0].geometry.type === 'Point') {
-        //         let sumLat = 0;
-        //         let sumLng = 0;
-        //         for (const feature of data.features) {
-        //             sumLat += feature.geometry.coordinates[1]; // Latitude
-        //             sumLng += feature.geometry.coordinates[0]; // Longitude
-        //             }
-        //         center = [sumLng / data.features.length, sumLat / data.features.length];
-        //     } else {
-        //         console.warn("Center calculation currently only supports Point geometries.");
-        //     }
-        //     this.center = center;
-        //     })
-        // .catch(error => {
-        //     console.error("Error loading JSON data:", error);
-        // });
+    
