@@ -7,48 +7,64 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
     <script src="classes.js"></script>
+    <script src="libfluidsynth-2.2.1.js"></script>
+    <script src="js-synthesizer.js"></script>
     <title>MIDI Player with Soundfont Dropdown</title>
   </head>
   <body>
     <div class="boxes-container">
         <div class="box1">
-      <div class="datasetSelectorBox">
-        <label for="datasetSelect">Select Dataset:</label>
-        <select id="datasetSelect">
-          <option value="">Select a dataset</option>
-          <option value="LaPine">La Pine</option>
-          <option value="USCities">Major US Cities</option>
-          <option value="Copper">Copper Deposits in India</option>
-          <option value="Enriched_USA_Major_Cities">Major Cities in USA</option>
-          <option value="AirportsMetadata">Airports in Finlad</option>
-          <option value="RTAStops">RTAStops</option>
-          <option value="Walls">Great Wall of China</option>
-      </select>
-  </div>
+          <div class="datasetSelectorBox">
+            <label for="datasetSelect">Select Dataset:</label>
+            <div class="playlist" id="datasetSelect">
+                <div class="playlist-item" data-value="LaPine">La Pine</div>
+                <div class="playlist-item" data-value="USCities">Major US Cities</div>
+                <div class="playlist-item" data-value="Copper">Copper Deposits in India</div>
+                <div class="playlist-item" data-value="Enriched_USA_Major_Cities">Major Cities in USA</div>
+                <div class="playlist-item" data-value="AirportsMetadata">Airports in Finland</div>
+                <div class="playlist-item" data-value="RTAStops">RTAStops</div>
+                <div class="playlist-item" data-value="Walls">Great Wall of China</div>
+                <div class="playlist-item" data-value="himalayas">Himalyan Mountain Peaks</div>
+                <div class="playlist-item" data-value="lemurs">Red-Fronted Lemur Distribution</div>
+                <div class="playlist-item" data-value="Hurricanes">Historical Hurricane Tracks</div>
+                <div class="playlist-item" data-value="rio_graffiti">Graffiti in Rio</div>
+            </div>
+        </div>
           <div>
-            <label for="soundfontSelect1">Select Soundfont:</label>
-            <select id="soundfontSelect1" onchange="changeSoundfont('midiPlayer1', this.value)">
-              <option value="SGM Plus">SGM Plus</option>
-              <option value="Salamander">Salamander</option>
-              <option value="Jazz Kit">Jazz Kit</option>
-            </select>
-          </div>
-          <midi-player id="midiPlayer1" src="tracks/out_midi1.mid" sound-font visualizer="#pianoRollVisualizer1">
-          </midi-player>
-          <midi-visualizer type="piano-roll" id="pianoRollVisualizer1" src="tracks/out_midi1.mid">
-          </midi-visualizer>
+          <select id="soundFontSelect"> 
+            <option value="https://yahnjr.github.io/map2midi/sounds/Acid%20SQ%20Neutral.sf2">Acid SQ Neutral</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Analog%20Saw.sf2">Analog Saw</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Beeper.sf2">Beeper</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Candy%20Bee.sf2">Candy Bee</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Dance%20Trance.sf2">Dance Trance</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Dirty%20Sub.sf2">Dirty Sub</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/FM%20Modulator.sf2">FM Modulator</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Happy%20Mellow.sf2">Happy Mellow</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Hyper%20Saw.sf2">Hyper Saw</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Plastic%20Strings.sf2">Plastic Strings</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Perfect%20Sine.sf2">Perfect Sine</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Poly%20Special%20Mono.sf2">Poly Special Mono</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Pulse%20Wobbler.sf2">Pulse Wobbler</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Sine%20Wave.sf2">Sine Wave</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Solar%20Wind.sf2">Solar Wind</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Super%20Saw%201.sf2">Super Saw 1</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Super%20Saw%202.sf2">Super Saw 2</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Super%20Saw%203.sf2">Super Saw 3</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Synth%20E.sf2">Synth E</option>
+        </select>
+      </div>
+      <div>
+        <button id="playButton">Play</button>
+        <button id="stopButton">Stop</button>
+      </div>
+          
         </div>
         <div class = "box2">
             <div id="map1" class="map-container"></div>
         </div>
-      <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
-      <script src ="main.js"></script>
-    <p>
-      For more information, see
-      <a href="https://github.com/cifkao/html-midi-player" target="_blank"
-        >the <strong>html-midi-player</strong> repository</a
-      >
-      on GitHub.
-    </p>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
+    <script src="main.js"></script>
+
   </body>
 </html>
