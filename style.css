@@ -6,17 +6,10 @@
   height: 80vh;
 }
 
-@media screen and (max-width: 768px) {
-  .boxes-container {
-    grid-template-columns: 1fr; /* Single column layout */
-    grid-template-rows: 40% 60%; /* 40% height for the first row, 60% for the second row */
-    height: auto; /* Adjust height automatically based on content */
-  }
-}
-
 .box {
   background-color: #0d0d0d;
   margin: 0;
+  box-sizing: border-box; /* Ensure padding is included in width/height */
 }
 
 .box1 {
@@ -29,6 +22,23 @@
   grid-column: 2;
   background-color: #d3d3d3;
 }
+
+@media screen and (max-width: 768px) {
+  .boxes-container {
+    display:flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .box1 {
+    flex: 3.5;
+  }
+
+  .box2 {
+    flex: 6.5;
+  }
+}
+
 
 .map-container {
   width: 100%;
@@ -46,6 +56,13 @@
   margin-bottom: 10px;
   font-weight: bold;
   color: #ccc;
+}
+
+@media screen and (max-width: 768px) {
+  .datasetSelectorBox {
+    overflow: auto; /* Enable scroll functionality */
+    max-height: 200px; /* Adjust this value for your desired maximum height */
+  }
 }
 
 .playlist {
