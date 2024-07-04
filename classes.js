@@ -7,6 +7,9 @@ class dataset {
         this.center = null;
         this.zoom = 12;
         this.color = color;
+        this.minLng = 0.0;
+        this.maxLng = 0.0;
+        this.step = 0.0;
 
         this.loadFeatures(json_file).then(() => {
             this.find_center();
@@ -43,7 +46,10 @@ class dataset {
                 minLat = Math.min(minLat, lat);
                 maxLat = Math.max(maxLat, lat);
                 minLng = Math.min(minLng, lng);
+                this.minLng = minLng;
                 maxLng = Math.max(maxLng, lng);
+                this.maxLng = maxLng;
+                this.step = (maxLng - minLng) / 48;
             } else if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
                 const flattenCoordinates = (coords) => {
                     if (typeof coords[0] === 'number') return [coords];

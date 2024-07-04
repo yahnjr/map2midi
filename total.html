@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <script src="classes.js"></script>
+    <script src="libfluidsynth-2.2.1.js"></script>
+    <script src="js-synthesizer.js"></script>
+    <title>MIDI Player with Soundfont Dropdown</title>
+  </head>
+  <style>
+    .boxes-container {
+  display: grid;
+  grid-template-columns: 25% 75%;
+  grid-gap: 10px;
+  width: 100%;
+  height: 80vh;
+}
+
+.box {
+  background-color: #0d0d0d;
+  margin: 0;
+}
+
+.box1 {
+  grid-column: 1;
+  background-color: #1a1a1a;
+  padding: 20px;
+}
+
+.box2 {
+  grid-column: 2;
+  background-color: #d3d3d3;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+
+.datasetSelectorBox {
+  width: 100%;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.datasetSelectorBox label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #ccc;
+}
+
+.playlist {
+  background-color: #333;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.playlist-item {
+  padding: 10px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.playlist-item:hover {
+  background-color: #444;
+}
+
+.playlist-item.selected {
+  background-color: #555;
+  color: #fff;
+}
+
+#soundFontSelect {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #333;
+  color: #ccc;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#soundFontSelect:hover {
+  background-color: #444;
+}
+
+#soundFontSelect option {
+  background-color: #333;
+  color: #ccc;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  width: 48%;
+  padding: 10px;
+  background-color: #333;
+  color: #ccc;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #444;
+}
+
+#progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #333;
+  margin-top: 10px;
+}
+
+#progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background-color: #ffffff;
+  transition: width 0.167s linear;
+}
+  </style>
+  <body>
+    <div class="boxes-container">
+        <div class="box1">
+          <div class="datasetSelectorBox">
+            <label for="datasetSelect">Select Dataset:</label>
+            <div class="playlist" id="datasetSelect">
+                <div class="playlist-item" data-value="Copper">Copper Deposits in India</div>
+                <div class="playlist-item" data-value="Enriched_USA_Major_Cities">Major Cities in USA</div>
+                <div class="playlist-item" data-value="AirportsMetadata">Airports in Finland</div>
+                <div class="playlist-item" data-value="RTAStops">Metro Stops in Massachusetts</div>
+                <div class="playlist-item" data-value="Walls">Great Wall of China</div>
+                <div class="playlist-item" data-value="himalayas">Himalyan Mountain Peaks</div>
+                <div class="playlist-item" data-value="lemurs">Red-Fronted Lemur Distribution</div>
+                <div class="playlist-item" data-value="Hurricanes">Historical Hurricane Tracks</div>
+                <div class="playlist-item" data-value="rio_graffiti">Graffiti in Rio</div>
+            </div>
+        </div>
+          <div class="datasetSelectorBox">
+          <select id="soundFontSelect"> 
+            <option value="https://yahnjr.github.io/map2midi/sounds/Acid%20SQ%20Neutral.sf2">Acid SQ Neutral</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Analog%20Saw.sf2">Analog Saw</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Beeper.sf2">Beeper</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Candy%20Bee.sf2">Candy Bee</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Dance%20Trance.sf2">Dance Trance</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Dirty%20Sub.sf2">Dirty Sub</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/FM%20Modulator.sf2">FM Modulator</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Happy%20Mellow.sf2">Happy Mellow</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Hyper%20Saw.sf2">Hyper Saw</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Plastic%20Strings.sf2">Plastic Strings</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Perfect%20Sine.sf2">Perfect Sine</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Poly%20Special%20Mono.sf2">Poly Special Mono</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Pulse%20Wobbler.sf2">Pulse Wobbler</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Sine%20Wave.sf2">Sine Wave</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Solar%20Wind.sf2">Solar Wind</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Super%20Saw%201.sf2">Super Saw 1</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Super%20Saw%202.sf2">Super Saw 2</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Super%20Saw%203.sf2">Super Saw 3</option>
+            <option value="https://yahnjr.github.io/map2midi/sounds/Synth%20E.sf2">Synth E</option>
+        </select>
+      </div>
+      <div class="button-container">
+        <button id="playButton">Play</button>
+        <button id="stopButton">Stop</button>
+      </div>
+      <div id="progress-bar"></div>
+          
+        </div>
+        <div class = "box2">
+            <div id="map1" class="map-container"></div>
+        </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
+    <script src="main.js"></script>
+  <script>
+    const mapboxAccessToken = 'pk.eyJ1IjoiaWZvcm1haGVyIiwiYSI6ImNsaHBjcnAwNDF0OGkzbnBzZmUxM2Q2bXgifQ.fIyIgSwq1WWVk9CKlXRXiQ'; // Replace with your Mapbox token
+mapboxgl.accessToken = mapboxAccessToken;
+const map1 = new mapboxgl.Map({
+    container: 'map1',
+    style: 'mapbox://styles/mapbox/satellite-streets-v11',
+    center: [0, 0], // Initial center
+    zoom: 2 // Initial zoom
+});
+
+console.log('Map initialized');
+
+function changeMidi(playerId, visualizerId, newSrc) {
+    console.log('changeMidi called with', playerId, visualizerId, newSrc);
+    const player = document.getElementById(playerId);
+    const visualizer = document.getElementById(visualizerId);
+    player.src = newSrc;
+    visualizer.src = newSrc;
+}
+
+function changeSoundfont(playerId, soundfontName) {
+    console.log('changeSoundfont called with', playerId, soundfontName);
+    const soundfontUrl = window.soundfonts[soundfontName];
+    if (!soundfontUrl) {
+        console.error("Soundfont URL not found for:", soundfontName);
+        return;
+    }
+    const player = document.getElementById(playerId);
+    player.stop();
+    player.soundFont = soundfontUrl;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM fully loaded and parsed');
+  const datasetSelector = document.getElementById('datasetSelect');
+  const datasets = {
+      RTAStops: new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid", "#9a17f1"),
+      Walls: new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid", "#a45c05"),
+      Copper: new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid", "#f88a2e"),
+      AirportsMetadata: new dataset("https://yahnjr.github.io/map2midi/docs/AirportsMetadata.geojson", "tracks/AirportsMetadata.mid", "#74fffd"),
+      Enriched_USA_Major_Cities: new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid", "#f5f526"),
+      himalayas: new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid", "#6ccbfb"),
+      lemurs: new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson", "tracks/lemurs.mid", "#ef1b1b"),
+      rio_graffiti: new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid", "#baf741"),
+      Hurricanes: new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes.mid", "#999999"),
+  };
+
+  datasetSelector.addEventListener('click', async (event) => {
+
+      const progressBar = document.getElementById('progress-bar');
+      const progressBarFill = document.createElement('div');
+      progressBarFill.id = 'progress-bar-fill';
+      progressBar.appendChild(progressBarFill);
+
+      if (event.target.classList.contains('playlist-item')) {
+          const selectedDatasetKey = event.target.getAttribute('data-value');
+          const selectedDataset = datasets[selectedDatasetKey];
+          console.log('Dataset selected:', selectedDatasetKey);
+
+          document.querySelectorAll('.playlist-item').forEach(item => item.classList.remove('selected'));
+          event.target.classList.add('selected');
+
+          if (selectedDataset) {
+              console.log('Loading dataset:', selectedDataset);
+              // Wait for the dataset to fully load
+              const checkLoaded = setInterval(() => {
+                  if (selectedDataset.loaded) {
+                      clearInterval(checkLoaded);
+
+                      // Update Mapbox map
+                      if (selectedDataset.center && selectedDataset.zoom) {
+                          map1.flyTo({
+                              center: selectedDataset.center,
+                              zoom: selectedDataset.zoom
+                          });
+                      }
+
+                      // Remove existing GeoJSON layer if it exists
+                      if (map1.getSource('geojson-layer')) {
+                          map1.removeLayer('geojson-layer');
+                          map1.removeSource('geojson-layer');
+                      }
+
+                      // Add new GeoJSON layer
+                      map1.addSource('geojson-layer', {
+                          type: 'geojson',
+                          data: selectedDataset.path
+                      });
+
+                      map1.addLayer({
+                          id: 'geojson-layer',
+                          type: 'circle',
+                          source: 'geojson-layer',
+                          paint: {
+                              'circle-radius': 3,
+                              'circle-color': selectedDataset.color
+                          }
+                      });
+
+                      // Update MIDI player
+                      const midiPlayer = document.getElementById('playButton');
+                      if (midiPlayer) {
+                          midiPlayer.dataset.midiPath = selectedDataset.midi_path;
+                          console.log('MIDI path set to:', selectedDataset.midi_path);
+                      }
+                  }
+              }, 100); // Check every 100ms if the dataset is loaded
+          } else {
+              console.log("Dataset not found");
+          }
+      }
+  });
+
+  let synth;
+  let context;
+  let isPlaying = false;
+
+  async function playSong() {
+      console.log('playSong called');
+      const datasetSelect = document.getElementById('datasetSelect');
+      const soundFontSelect = document.getElementById('soundFontSelect');
+      const selectedDatasetKey = datasetSelect.querySelector('.selected').getAttribute('data-value');
+      const selectedDataset = datasets[selectedDatasetKey];
+      const midiUrl = selectedDataset.midi_path;
+      const soundFontUrl = soundFontSelect.value;
+
+      console.log('Fetching MIDI from', midiUrl);
+      const midi = await fetch(midiUrl).then(response => response.arrayBuffer());
+      console.log('Fetching SoundFont from', soundFontUrl);
+      const sfontBuffer = await fetch(soundFontUrl).then(response => response.arrayBuffer());
+
+      await JSSynth.waitForReady();
+      loadSynthesizer(midi, sfontBuffer);
+  }
+
+  async function loadSynthesizer(midi, sfontBuffer) {
+      console.log('loadSynthesizer called');
+      context = new AudioContext();
+      synth = new JSSynth.Synthesizer();
+      synth.init(context.sampleRate);
+
+      const node = synth.createAudioNode(context, 8192);
+      node.connect(context.destination);
+
+      try {
+          await synth.loadSFont(sfontBuffer);
+          await synth.addSMFDataToPlayer(midi);
+          await synth.playPlayer();
+          await synth.waitForPlayerStopped();
+      } catch (err) {
+          console.log('Failed:', err);
+      }
+  }
+
+  function stopSong() {
+      console.log('stopSong called');
+      if (synth) {
+          if (synth.stopPlayer) {
+              synth.stopPlayer();
+          }
+          synth.close();
+          context.close();
+          synth = null;
+          context = null;
+          isPlaying = false;
+      }
+  }
+
+  const playButton = document.getElementById('playButton');
+  if (playButton) {
+      console.log('playButton found');
+      playButton.addEventListener('click', playSong);
+  } else {
+      console.error('playButton not found');
+  }
+
+  const stopButton = document.getElementById('stopButton');
+  if (stopButton) {
+      console.log('stopButton found');
+      stopButton.addEventListener('click', stopSong);
+  } else {
+      console.error('stopButton not found');
+  }
+});
+
+let progressInterval;
+let progressWidth = 0;
+
+function startProgress() {
+    if (progressInterval) {
+        clearInterval(progressInterval);
+    }
+    progressWidth = 0;
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    progressBarFill.style.width = '0%';
+    
+    progressInterval = setInterval(() => {
+        progressWidth += 100 / 48;
+        progressBarFill.style.width = `${progressWidth}%`;
+        
+        if (progressWidth >= 100) {
+            clearInterval(progressInterval);
+            // Add any additional logic for when the progress completes
+        }
+    }, 167); // 8000ms / 48 ≈ 167ms
+}
+
+function stopProgress() {
+    if (progressInterval) {
+        clearInterval(progressInterval);
+    }
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    progressBarFill.style.width = '0%';
+    progressWidth = 0;
+}
+
+document.getElementById('playButton').addEventListener('click', () => {
+    startProgress();
+    // Your existing play logic here
+});
+
+document.getElementById('stopButton').addEventListener('click', () => {
+    stopProgress();
+    // Your existing stop logic here
+});
+
+  </script>
+  </body>
+</html>

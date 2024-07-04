@@ -6,6 +6,14 @@
   height: 80vh;
 }
 
+@media screen and (max-width: 768px) {
+  .boxes-container {
+    grid-template-columns: 1fr; /* Single column layout */
+    grid-template-rows: 40% 60%; /* 40% height for the first row, 60% for the second row */
+    height: auto; /* Adjust height automatically based on content */
+  }
+}
+
 .box {
   background-color: #0d0d0d;
   margin: 0;
@@ -100,4 +108,18 @@ button {
 
 button:hover {
   background-color: #444;
+}
+
+#progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #333;
+  margin-top: 10px;
+}
+
+#progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background-color: #ffffff;
+  transition: width 0.167s linear;
 }
