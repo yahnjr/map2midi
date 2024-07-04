@@ -1,11 +1,12 @@
 class dataset {
-    constructor(json_file, midi_file) {
+    constructor(json_file, midi_file, color) {
         this.name = json_file.replace(/\.[^/]+$/, "");
         this.path = json_file;
         this.midi_path = midi_file;
         this.features = null;
         this.center = null;
         this.zoom = 12;
+        this.color = color;
 
         this.loadFeatures(json_file).then(() => {
             this.find_center();
@@ -77,14 +78,11 @@ class dataset {
         
             const LngDist = Math.floor(maxLng - minLng);
             const LatDist = Math.floor(maxLat - minLat);
-        
-            console.log("Long distance", LngDist);
-            console.log("Lat distance", LatDist);
-        
+            
+            const minZoom = 2;
+            const maxZoom = 10;
+
             function distanceToZoom(distanceInMeters) {
-                // Define the desired zoom range
-                const minZoom = 2;
-                const maxZoom = 11;
             
                 // Calculate the zoom level based on the distance
                 const zoomRange = maxZoom - minZoom;
@@ -103,20 +101,20 @@ class dataset {
                 distance = LatDist;
             }
         
-            const zoom = distanceToZoom(distance);
+            const zoom = Math.min(maxZoom, distanceToZoom(distance) + 0.5);
         
             this.zoom = zoom;
         }
     }
-let Enriched_USA_Major_Cities = new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid")
-let RTAStops = new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid")
-let Walls = new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid")
-let Copper = new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid")
-let AirportsMetadata = new dataset("https://yahnjr.github.io/map2midi/docs/AirportsMetadata.geojson", "tracks/AirportsMetadata.mid")
-let lemurs = new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson", "tracks/lemurs.mid")
-let Hurricanes = new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes.mid")
-let rio_graffiti = new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid")
-let himalayas = new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid")
+let Enriched_USA_Major_Cities = new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid", "#f5f526")
+let RTAStops = new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid", "#9a17f1")
+let Walls = new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid", "#a45c05")
+let Copper = new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid", "#f88a2e")
+let AirportsMetadata = new dataset("https://yahnjr.github.io/map2midi/docs/AirportsMetadata.geojson", "tracks/AirportsMetadata.mid", "#74fffd")
+let lemurs = new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson", "tracks/lemurs.mid", "#ef1b1b")
+let Hurricanes = new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes.mid", "#999999") 
+let rio_graffiti = new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid", "#baf741")
+let himalayas = new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid", "6ccbfb")
 
 // Note: Since loadFeatures is asynchronous, the center might not be immediately available.
 // You might need to wait or use an event/callback to ensure it's loaded before accessing it.

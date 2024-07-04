@@ -33,15 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM fully loaded and parsed');
   const datasetSelector = document.getElementById('datasetSelect');
   const datasets = {
-      RTAStops: new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid"),
-      Walls: new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid"),
-      Copper: new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid"),
-      AirportsMetadata: new dataset("https://yahnjr.github.io/map2midi/docs/AirportsMetadata.geojson", "tracks/AirportsMetadata.mid"),
-      Enriched_USA_Major_Cities: new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid"),
-      himalayas: new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid"),
-      lemurs: new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson", "tracks/lemurs.mid"),
-      rio_graffiti: new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid"),
-      Hurricanes: new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes.mid"),
+      RTAStops: new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid", "#9a17f1"),
+      Walls: new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid", "#a45c05"),
+      Copper: new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid", "#f88a2e"),
+      AirportsMetadata: new dataset("https://yahnjr.github.io/map2midi/docs/AirportsMetadata.geojson", "tracks/AirportsMetadata.mid", "#74fffd"),
+      Enriched_USA_Major_Cities: new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid", "#f5f526"),
+      himalayas: new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid", "#6ccbfb"),
+      lemurs: new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson", "tracks/lemurs.mid", "#ef1b1b"),
+      rio_graffiti: new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid", "#baf741"),
+      Hurricanes: new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes.mid", "#999999"),
   };
 
   datasetSelector.addEventListener('click', async (event) => {
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           source: 'geojson-layer',
                           paint: {
                               'circle-radius': 3,
-                              'circle-color': '#007cbf'
+                              'circle-color': selectedDataset.color
                           }
                       });
 

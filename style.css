@@ -13,7 +13,8 @@
 
 .box1 {
   grid-column: 1;
-  background-color: #d3d3d3;
+  background-color: #1a1a1a;
+  padding: 20px;
 }
 
 .box2 {
@@ -27,8 +28,8 @@
 }
 
 .datasetSelectorBox {
-  width: 300px;
-  margin: 20px;
+  width: 100%;
+  margin-bottom: 20px;
   font-family: Arial, sans-serif;
 }
 
@@ -36,6 +37,7 @@
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
+  color: #ccc;
 }
 
 .playlist {
@@ -60,10 +62,10 @@
   color: #fff;
 }
 
-/* New styles for instrument select dropdown */
-.instrument-select {
+#soundFontSelect {
   width: 100%;
   padding: 10px;
+  margin-bottom: 20px;
   background-color: #333;
   color: #ccc;
   border: none;
@@ -71,27 +73,31 @@
   cursor: pointer;
 }
 
-.instrument-select:hover {
+#soundFontSelect:hover {
   background-color: #444;
 }
 
-/* New styles for play and stop buttons */
-.control-button {
-  width: 100%;
+#soundFontSelect option {
+  background-color: #333;
+  color: #ccc;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  width: 48%;
   padding: 10px;
   background-color: #333;
   color: #ccc;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s;
 }
 
-.control-button:hover {
+button:hover {
   background-color: #444;
-}
-
-.play-button.playing {
-  background-color: #555;
-  color: #fff;
 }
