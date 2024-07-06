@@ -5,7 +5,7 @@ const map1 = new mapboxgl.Map({
   container: "map1",
   style: "mapbox://styles/mapbox/satellite-streets-v11",
   center: [0, 0],
-  zoom: 2, 
+  zoom: 1.5, 
 });
 
 console.log("Map initialized");
@@ -108,6 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
               paint: {
                 "circle-radius": 4,
                 "circle-color": selectedDataset.color,
+                'circle-stroke-width': 0.5,
+                'circle-stroke-color': 'light gray',
               },
             });
 
