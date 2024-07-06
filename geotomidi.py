@@ -6,7 +6,7 @@ from midiutil.MidiFile import MIDIFile
 
 def createMidi(df, features_name):
     filename = f"C:\\python\\scripts\\midi2play\\tracks\\{features_name}.mid"
-    mf = MIDIFile(1)  # 1 track
+    mf = MIDIFile(1)  
     track = 0
     channel = 0
     
@@ -18,7 +18,7 @@ def createMidi(df, features_name):
     mf.addTimeSignature(track, 0, 4, 2, 24)
     
     # Calculate duration for each quarter note (in beats)
-    quarter_note_duration = 1/3  # 1/3 beat for a quarter note to fit 48 notes in 16 beats
+    quarter_note_duration = 1/4  # 1/3 beat for a quarter note to fit 48 notes in 16 beats
     
     # Loop through each column (1 to 48)
     for col in range(1, 49):
@@ -45,7 +45,7 @@ def geo2midi2(input_layer):
     min_x, min_y, max_x, max_y = bounds
     x_range = max_x - min_x
     y_range = max_y - min_y
-    x_step = x_range / 48
+    x_step = x_range / 64
     y_step = y_range / 24
     print(f"{x_step}, {y_step}")
     features['normalized_x'] = features.geometry.x - min_x
@@ -63,7 +63,7 @@ def geo2midi2(input_layer):
     features_name = input_layer.split("\\")[-1][:-4]
     createMidi(features, features_name)
 
-input_layer = r"C:\python\shapefiles\rio_graffiti.shp"
+input_layer = r"C:\python\shapefiles\Copper.shp"
 geo2midi2(input_layer)
 
 ################################################################################################################################################s
