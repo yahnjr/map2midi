@@ -10,6 +10,10 @@ class dataset {
         this.minLng = 0.0;
         this.maxLng = 0.0;
         this.step = 0.0;
+        this.xRange = 0.0;
+        this.yRange = 0.0;
+        this.maxRange = 0.0;
+        this.loaded = false;
 
         this.loadFeatures(json_file).then(() => {
             this.find_center();
@@ -49,7 +53,7 @@ class dataset {
                 this.minLng = minLng;
                 maxLng = Math.max(maxLng, lng);
                 this.maxLng = maxLng;
-                this.step = (maxLng - minLng) / 48;
+                this.step = (maxLng - minLng) / 64;
             } else if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
                 const flattenCoordinates = (coords) => {
                     if (typeof coords[0] === 'number') return [coords];
@@ -68,49 +72,60 @@ class dataset {
 
         this.center = [(minLng + maxLng) / 2, (minLat + maxLat) / 2];
     }
-        set_zoom() {
-            if (!this.features) return;
-        
-            let minLat = Infinity, maxLat = -Infinity;
-            let minLng = Infinity, maxLng = -Infinity;
-        
-            for (const feature of this.features) {
-                const coords = feature.geometry.coordinates;
-                minLat = Math.min(minLat, coords[1]);
-                maxLat = Math.max(maxLat, coords[1]);
-                minLng = Math.min(minLng, coords[0]);
-                maxLng = Math.max(maxLng, coords[0]);
-            }
-        
-            const LngDist = Math.floor(maxLng - minLng);
-            const LatDist = Math.floor(maxLat - minLat);
-            
-            const minZoom = 2;
-            const maxZoom = 10;
+    set_zoom() {
+        if (!this.features) return;
+    
+        let minLat = Infinity, maxLat = -Infinity;
+        let minLng = Infinity, maxLng = -Infinity;
+    
+        for (const feature of this.features) {
+            const coordinates = feature.geometry.coordinates;
 
-            function distanceToZoom(distanceInMeters) {
-            
-                const zoomRange = maxZoom - minZoom;
-                const zoom = minZoom + (zoomRange / distanceInMeters);
-            
-                distance = Math.max(minZoom, Math.min(maxZoom, zoom));
+            if (feature.geometry.type === 'Point') {
+                const [lng, lat] = coordinates;
+                minLat = Math.min(minLat, lat);
+                maxLat = Math.max(maxLat, lat);
+                minLng = Math.min(minLng, lng);
+                maxLng = Math.max(maxLng, lng);
+            } else if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
+                const flattenCoordinates = (coords) => {
+                    if (typeof coords[0] === 'number') return [coords];
+                    return coords.flatMap(flattenCoordinates);
+                };
 
-                return distance
+                const allCoords = flattenCoordinates(coordinates);
+                for (const [lng, lat] of allCoords) {
+                    minLat = Math.min(minLat, lat);
+                    maxLat = Math.max(maxLat, lat);
+                    minLng = Math.min(minLng, lng);
+                    maxLng = Math.max(maxLng, lng);
+                }
             }
+        }
+    
+        this.xRange = maxLng - minLng;
+        this.yRange = maxLat - minLat;
+        this.maxRange = Math.max(this.xRange, this.yRange);
         
-            let distance;
-            if (LngDist > LatDist) {
-                distance = LngDist;
-            } else {
-                distance = LatDist;
-            }
-        
-            const zoom = Math.min(maxZoom, distanceToZoom(distance) + 0.5);
-        
-            this.zoom = zoom;
+        this.calculateZoom();
+    }
+
+    calculateZoom() {
+        if (this.maxRange > 0) {
+            this.zoom = -1.295 * Math.log(this.maxRange) + 7.9808;
+        } else {
+            console.warn(`Cannot calculate zoom for ${this.name}: maxRange is ${this.maxRange}`);
+            this.zoom = 0; // or some default value
         }
     }
+
+    isLoaded() {
+        return this.loaded;
+    }
+}
+W
 let Enriched_USA_Major_Cities = new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid", "#f5f526")
+let Enriched_USA_Major_Cities1 = new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities1.mid", "#f5f526")
 let RTAStops = new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid", "#9a17f1")
 let Walls = new dataset("https://yahnjr.github.io/map2midi/docs/Walls.geojson", "tracks/Walls.mid", "#a45c05")
 let Copper = new dataset("https://yahnjr.github.io/map2midi/docs/Copper.geojson", "tracks/Copper.mid", "#f88a2e")
@@ -119,15 +134,18 @@ let lemurs = new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson"
 let Hurricanes = new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes.mid", "#999999") 
 let rio_graffiti = new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid", "#baf741")
 let himalayas = new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid", "6ccbfb")
+let lemurs1 = new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson", "tracks/lemurs1.mid", "#ef1b1b")
+let Hurricanes1 = new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes1.mid", "#999999") 
 
 setTimeout(() => {
-    console.log('Copper zoom', Copper.zoom);
-    console.log("Airports zoom", AirportsMetadata.zoom);
-    console.log("Walls zoom", Walls.zoom);
-    console.log("Enriched_USA_Major_Cities zoom", Enriched_USA_Major_Cities.zoom);
-    console.log("RTAStops zoom", RTAStops.zoom);
-    console.log("rio zoom:", rio_graffiti.zoom)
-}, 2000); 
+    const datasets = [
+        Copper, AirportsMetadata, Walls, Enriched_USA_Major_Cities, 
+        RTAStops, rio_graffiti, lemurs, Hurricanes, himalayas, lemurs1, Hurricanes1
+    ];
 
+    datasets.forEach(dataset => {
+        console.log(`${dataset.name} extent:`, dataset.extent);
+    }); 
 
+});
     

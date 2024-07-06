@@ -11,17 +11,17 @@ def createMidi(df, features_name):
     channel = 0
     
     # Set tempo (120 BPM for a standard tempo)
-    tempo = 120
+    tempo = 110
     mf.addTempo(track, 0, tempo)
     
     # Set time signature to 4/4
     mf.addTimeSignature(track, 0, 4, 2, 24)
     
     # Calculate duration for each quarter note (in beats)
-    quarter_note_duration = 1/4  # 1/3 beat for a quarter note to fit 48 notes in 16 beats
+    note_duration = 0.3  # Increase from 1/4 to 1/3
     
     # Loop through each column (1 to 48)
-    for col in range(1, 49):
+    for col in range(1, 64):
         # Find the row with the current column value
         row = df[df['col'] == col]
         
@@ -29,10 +29,10 @@ def createMidi(df, features_name):
             note = row['Note'].values[0]  # Get the note value
             
             # Calculate time based on the column number (adjust for 0-based index)
-            note_time = (col - 1) * quarter_note_duration
+            note_time = (col - 1) * note_duration
             
             # Add note
-            mf.addNote(track, channel, note, note_time, quarter_note_duration, volume=100)
+            mf.addNote(track, channel, note, note_time, note_duration, volume=100)
             print(f"Note added at time: {note_time:.2f}")
 
     with open(filename, "wb") as outf:
@@ -63,7 +63,7 @@ def geo2midi2(input_layer):
     features_name = input_layer.split("\\")[-1][:-4]
     createMidi(features, features_name)
 
-input_layer = r"C:\python\shapefiles\Copper.shp"
+input_layer = r"C:\python\shapefiles\rio_graffiti.shp"
 geo2midi2(input_layer)
 
 ################################################################################################################################################s

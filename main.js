@@ -8,6 +8,10 @@ const map1 = new mapboxgl.Map({
   zoom: 1.5, 
 });
 
+map1.on('zoomend', function() {
+  console.log('Current zoom level:', map1.getZoom());
+});
+
 console.log("Map initialized");
 
 const datasets = {
@@ -226,17 +230,17 @@ function startProgress() {
     }
 
     progressInterval = setInterval(() => {
-        progressWidth += 100 / 48;
+        progressWidth += 100 / 64;
         progressBarFill.style.width = `${progressWidth}%`;
         
         updateMapLayer();
 
         currentStep++;
         
-        if (currentStep >= 48) {
+        if (currentStep >= 64) {
             clearInterval(progressInterval);
         }
-    }, 167); 
+    }, 156); 
 }
 
 function stopProgress() {
@@ -318,7 +322,7 @@ async function playSong() {
     const lngs = selectedDataset.features.map(f => f.geometry.coordinates[0]);
     selectedDataset.minLng = Math.min(...lngs);
     selectedDataset.maxLng = Math.max(...lngs);
-    selectedDataset.step = (selectedDataset.maxLng - selectedDataset.minLng) / 48;
+    selectedDataset.step = (selectedDataset.maxLng - selectedDataset.minLng) / 64;
 
     startProgress();
     await JSSynth.waitForReady();
