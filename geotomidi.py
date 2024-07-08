@@ -10,29 +10,28 @@ def createMidi(df, features_name):
     track = 0
     channel = 0
     
-    # Set tempo (120 BPM for a standard tempo)
+    # Set tempo 
     tempo = 110
     mf.addTempo(track, 0, tempo)
     
     # Set time signature to 4/4
     mf.addTimeSignature(track, 0, 4, 2, 24)
     
-    # Calculate duration for each quarter note (in beats)
-    note_duration = 0.3  # Increase from 1/4 to 1/3
+    # Calculate duration for each note
+    note_duration = 0.3  
     
-    # Loop through each column (1 to 48)
+    # Loop through each column (1 to 64)
     for col in range(1, 64):
-        # Find the row with the current column value
         row = df[df['col'] == col]
         
         if not row.empty:
-            note = row['Note'].values[0]  # Get the note value
+            note = row['Note'].values[0] 
             
             # Calculate time based on the column number (adjust for 0-based index)
             note_time = (col - 1) * note_duration
             
             # Add note
-            mf.addNote(track, channel, note, note_time, note_duration, volume=100)
+            mf.addNote(track, channel, note, note_time, note_duration, volume=80)
             print(f"Note added at time: {note_time:.2f}")
 
     with open(filename, "wb") as outf:
@@ -50,7 +49,6 @@ def geo2midi2(input_layer):
     print(f"{x_step}, {y_step}")
     features['normalized_x'] = features.geometry.x - min_x
     features['normalized_y'] = features.geometry.y - min_y
-    # Calculate column and row values
     features['col'] = (features['normalized_x'] / x_step).astype(int) + 1
     features['row'] = (features['normalized_y'] / y_step).astype(int) + 1
     for idx, feature in features.iterrows():
@@ -63,7 +61,7 @@ def geo2midi2(input_layer):
     features_name = input_layer.split("\\")[-1][:-4]
     createMidi(features, features_name)
 
-input_layer = r"C:\python\shapefiles\rio_graffiti.shp"
+input_layer = r"C:\python\shapefiles\oil_platforms.shp"
 geo2midi2(input_layer)
 
 ################################################################################################################################################s

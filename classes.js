@@ -123,7 +123,6 @@ class dataset {
         return this.loaded;
     }
 }
-W
 let Enriched_USA_Major_Cities = new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities.mid", "#f5f526")
 let Enriched_USA_Major_Cities1 = new dataset("https://yahnjr.github.io/map2midi/docs/Enriched_USA_Major_Cities.geojson", "tracks/Enriched_USA_Major_Cities1.mid", "#f5f526")
 let RTAStops = new dataset("https://yahnjr.github.io/map2midi/docs/RTAStops.geojson", "tracks/RTAStops.mid", "#9a17f1")
@@ -134,8 +133,12 @@ let lemurs = new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson"
 let Hurricanes = new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes.mid", "#999999") 
 let rio_graffiti = new dataset("https://yahnjr.github.io/map2midi/docs/rio_graffiti.geojson", "tracks/rio_graffiti.mid", "#baf741")
 let himalayas = new dataset("https://yahnjr.github.io/map2midi/docs/himalayas.geojson", "tracks/himalayas.mid", "6ccbfb")
-let lemurs1 = new dataset("https://yahnjr.github.io/map2midi/docs/lemurs.geojson", "tracks/lemurs1.mid", "#ef1b1b")
-let Hurricanes1 = new dataset("https://yahnjr.github.io/map2midi/docs/Hurricanes.geojson", "tracks/Hurricanes1.mid", "#999999") 
+let HKredtide = new dataset("docs/HKredtide.geojson", "tracks/HKredtide.mid", "e1460e")
+let oil_platforms = new dataset("docs/oil_platforms.geojson", "tracks/oil_platforms.mid", "191818")
+let HokkaidoForests = new dataset("docs/HokkaidoForests.geojson", "tracks/HokkaidoForests.mid", "208504")
+let earthquakes = new dataset("docs/earthquakes.geojson", "tracks/earthquakes.mid", "b6a7a7")
+let Coffee = new dataset("docs/Coffee.geojson", "tracks/Coffee.mid", "3d2502")
+
 
 setTimeout(() => {
     const datasets = [

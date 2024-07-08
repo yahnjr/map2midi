@@ -19,15 +19,62 @@
           <div class="datasetSelectorBox">
             <label for="datasetSelect">Select Dataset:</label>
             <div class="playlist" id="datasetSelect">
-                <div class="playlist-item" data-value="Copper">Copper Deposits in India</div>
-                <div class="playlist-item" data-value="Enriched_USA_Major_Cities">Major Cities in USA</div>
-                <div class="playlist-item" data-value="AirportsMetadata">Airports in Finland</div>
-                <div class="playlist-item" data-value="RTAStops">Metro Stops in Massachusetts</div>
-                <div class="playlist-item" data-value="Walls">Great Wall of China</div>
-                <div class="playlist-item" data-value="himalayas">Himalyan Mountain Peaks</div>
-                <div class="playlist-item" data-value="lemurs">Red-Fronted Lemur Distribution</div>
-                <div class="playlist-item" data-value="Hurricanes">Recent Hurricane/Typhoon Tracks</div>
-                <div class="playlist-item" data-value="rio_graffiti">Graffiti in Rio</div>
+              <div class="playlist-item" data-value="Copper" data-link="https://livingatlas.esri.in/server1/rest/services/Mining/IN_MineralDeposits/MapServer">
+                Copper Deposits in India
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="Enriched_USA_Major_Cities" data-link="https://services.arcgis.com/BG6nSlhZSAWtExvp/arcgis/rest/services/Enriched_USA_Major_Cities/FeatureServer">
+                Major Cities in USA
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="AirportsMetadata" data-link="https://services1.arcgis.com/rhs5fjYxdOG1Et61/arcgis/rest/services/Air_ports/FeatureServer">
+                Airports in Finland
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="RTAStops" data-link="https://gis.massdot.state.ma.us/arcgis/rest/services/Multimodal/RTAs/FeatureServer">
+                Metro Stops in Massachusetts
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="Walls" data-link="https://services4.arcgis.com/cjsiC6u2NZRyup0f/arcgis/rest/services/Great_Wall_of_China_WFL1/FeatureServer">
+                Great Wall of China
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="himalayas" data-link="https://services7.arcgis.com/iEMmryaM5E3wkdnU/arcgis/rest/services/Himalaya_Mountains/FeatureServer">
+                Himalayan Mountain Peaks
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="lemurs" data-link="https://services1.arcgis.com/Rb9MKKyDOX5VLHwq/arcgis/rest/services/redfronted_lemur_distribution/FeatureServer">
+                Red-Fronted Lemur Distribution
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="Hurricanes" data-link="https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Recent_Hurricanes_v1/FeatureServer">
+                Recent Hurricane/Typhoon Tracks
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="rio_graffiti" data-link="https://services8.arcgis.com/tblHe99qQFMcNzpC/arcgis/rest/services/survey123_9f4757129ee74732bf104f559cc563eb_results/FeatureServer">
+                Graffiti in Rio
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="oil_platforms" data-link="https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/Oil_and_Gas_Infrastructure/FeatureServer">
+                Oil Platforms in the Gulf of Mexico
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="earthquakes" data-link="https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USGS_Seismic_Data_v1/FeatureServer">
+                Recent Earthquakes
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="HKredtide" data-link="https://services3.arcgis.com/6j1KwZfY2fZrfNMR/arcgis/rest/services/Red_Tide_Incident_in_Hong_Kong/FeatureServer">
+                Hong Kong Red Tide Event
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="Coffee" data-link="https://services1.arcgis.com/7EzQnrfw48ewO24q/arcgis/rest/services/Big_Coffee_Growing_Regions_of_the_World/FeatureServer">
+                Coffee Producing Hubs
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
+              <div class="playlist-item" data-value="HokkaidoForests" data-link="https://services9.arcgis.com/2y39yojBa5v84JFa/arcgis/rest/services/森林管理署/FeatureServer">
+                Forest Recreation Areas in Hokkaido
+                <span class="info-button" title="More information about this dataset.">i</span>
+              </div>
             </div>
         </div>
           <div class="datasetSelectorBox">
@@ -78,6 +125,9 @@
             <div id="map1" class="map-container"></div>
         </div>
 </section>
+
+<p>Icons from <a href="https://www.flaticon.com/authors/freepik">Freepik on flaticon.com</a></p>
+<p>Sythesizer functionality utilizes the <a href="https://github.com/jet2jet/js-synthesizer">js-synthesizer</a> library.</p>
 
 <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/dist/magentamusic.min.js"></script>
     <script src="main.js"></script>

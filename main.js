@@ -60,6 +60,31 @@ const datasets = {
       "tracks/Hurricanes.mid",
       "#999999"
     ),
+    Coffee: new dataset(
+      "docs/Coffee.geojson",
+      "tracks/Coffee.mid",
+      "#3d2502"
+    ),
+    earthquakes: new dataset(
+      "docs/earthquakes.geojson",
+      "tracks/earthquakes.mid",
+      "#b6a7a7"
+    ),
+    HKredtide: new dataset(
+      "docs/HKredtide.geojson",
+      "tracks/HKredtide.mid",
+      "#e1460e"
+    ),
+    HokkaidoForests: new dataset(
+      "docs/HokkaidoForests.geojson",
+      "tracks/HokkaidoForests.mid",
+      "#208504"
+    ),
+    oil_platforms: new dataset(
+      "docs/oil_platforms.geojson",
+      "tracks/oil_platforms.mid",
+      "#191818"
+    ),
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -126,6 +151,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 100); 
       } else {
         console.log("Dataset not found");
+      }
+    }
+
+    if (event.target.classList.contains("info-button")) {
+      const link = event.target.parentElement.getAttribute("data-link");
+      if (link) {
+        window.open(link, "_blank");
       }
     }
   });
